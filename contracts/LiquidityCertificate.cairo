@@ -4,6 +4,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math import assert_le, assert_lt
 from starkware.starknet.common.syscalls import call_contract, get_caller_address
+from starkware.cairo.common.uint256 import Uint256
 
 from contracts.utils.constants import FALSE, TRUE
 
@@ -37,10 +38,8 @@ from openzeppelin.access.ownable import (
 #
 
 struct CertificateData:
-    member token0: felt
-    member token1: felt
-    member share_amount: felt
-    member entered_at: felt
+    member amount0: felt
+    member amount1: felt
 end
 
 #
@@ -84,11 +83,19 @@ func mint{
         pedersen_ptr: HashBuiltin*,
         range_check_ptr
     }(
-        owner: felt,
-        amount: Uint256,
-        entered_at: felt
+        _amount0: Uint256,
+        _amount1: Uint256,
+        _owner: felt
     ):
     alloc_locals
     let (certificate_id) = _certificate_id.read()
     let (local new_certificate_id) = certificate_id++
-    _certificate_data.write(new_certificate_id, )
+    let (data) = CertificateData(
+        amount0 = _token0,
+        amount1 = _token1,
+    )
+    _certificate_data.write(new_certificate_id, data)
+    ERC721_mint(to=_owner, tokenId=new_certificate_id)
+    return ()
+end
+    
