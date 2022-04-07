@@ -24,6 +24,18 @@ func _liquidity_certificate() -> (certificate_address: felt):
 end
 
 #
+# Getters
+#
+
+@view
+func get_reserves(){
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr
+    }() -> (reserve_a: Uint256, reserve_b: Uint256):
+    
+
+#
 # Constructor
 #
 
@@ -63,6 +75,15 @@ func add_liquidity{
     let (liquidity_certificate) = _liquidity_certificate.read()
     ILiquidityCertificate.mint(
         contract_address=liquidity_certificate,
+
+@external
+func remove_liquidity{
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr
+    }(
+        to: felt
+    )
         
 
 
