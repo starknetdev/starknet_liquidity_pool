@@ -5,7 +5,6 @@ from starkware.starknet.common.syscalls import call_contract, get_caller_address
 from starkware.cairo.common.uint256 import (
     Uint256,
     uint256_add,
-    uint256_gt
     uint256_gt,
     uint256_lt
 )

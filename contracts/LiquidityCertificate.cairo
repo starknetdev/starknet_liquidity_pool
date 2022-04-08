@@ -38,12 +38,7 @@ from openzeppelin.access.ownable import (
 #
 
 struct CertificateData:
-<<<<<<< HEAD
-    member amount0: felt
-    member amount1: felt
-=======
     liquidity: Uint256
->>>>>>> 6f341aaef873ced4577efc9089254d6b03046e03
 end
 
 #
