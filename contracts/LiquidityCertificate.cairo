@@ -39,6 +39,7 @@ from openzeppelin.access.ownable import (
 
 struct CertificateData:
     liquidity: Uint256
+    id: felt
 end
 
 #
@@ -46,7 +47,7 @@ end
 #
 
 @storage_var
-func _certificate_id() -> (res: felt):
+func _certificate_id_count() -> (res: felt):
 end
 
 @storage_var
@@ -83,13 +84,19 @@ func mint{
         range_check_ptr
     }(
         owner: felt,
-        amount0: Uint256,
-        amount1: Uint256
+        liquidity: Uint256
     ):
     alloc_locals
     let (certificate_id) = _certificate_id.read()
-    let (local new_certificate_id) = certificate_id++
-    _certificate_data.write(new_certificate_id, )
+    let (new_certificate_id) = certificate_id++
+    let (data) = CertificateData(
+        liquidity=liquidity,
+        id=new_certificate_id
+    )
+    _certificate_data.write(new_certificate_id, data)
+    ERC721_mint(owner, id)
+    return ()
+end
 
 func burn{
         syscall_ptr: felt*,

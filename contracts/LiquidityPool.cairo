@@ -10,6 +10,7 @@ from starkware.cairo.common.uint256 import (
 )
 
 from openzeppelin.access.ownable import Ownable_initializer
+from contracts.utils.constants import FALSE, TRUE
 
 from openzeppelin.token.erc20.interfaces.IERC20 import IERC20
 from contracts.interfaces.ILiquidityCertificate import ILiquidityCertificate
@@ -98,6 +99,7 @@ end
 # External
 #
 
+## TODO: Implement OR logic for checking amounts
 @external
 func add_liquidity{
         syscall_ptr: felt*,
@@ -110,8 +112,8 @@ func add_liquidity{
     let (check_amount0) = uint256_gt(amount0, 0)
     let (check_amount1) = uint256_gt(amount1, 0)
     with_attr error_message("LP Error: Amount is too small"):
-        assert check_amount0 = 1
-        assert check_amount1 = 1
+        assert check_amount0 = TRUE
+        assert check_amount1 = TRUE
     end
     let (local reserve0) = Uint256_add(_reserve0, amount0)
     let (local reserve1) = Uint256_add(_reserve1, amount1)
@@ -156,7 +158,7 @@ func get_optimal_pair_amount{
     ) -> (amount1: Uint256):
     let (local check_amount0) = uint256_gt(amount0,0)
     with_attr error_message("LP Error: Amount must be greater than 0"):
-        assert check_amount0 = 1
+        assert check_amount0 = TRUE
     end
     let (amount1) = (amount1 * reserve2) / reserve1
     return (amount1)
@@ -180,6 +182,8 @@ func get_amount_out{
     return (amount_out)
 end
 
+
+## TODO: Implement OR logic for checking amounts
 @external
 func swap{
         syscall_ptr: felt*,
@@ -196,8 +200,8 @@ func swap{
     let (local check_amount0) = uint256_gt(amount0_out,0)
     let (local check_amount1) = uint256_gt(amount1_out,0)
     with_attr error_message("Swap Error: Amount must be greater than 0"):
-        assert check_amount0 = 1
-        assert check_amount0 = 1
+        assert check_amount0 = TRUE
+        assert check_amount0 = TRUE
     end
 
     # Check amount is less than reserve
@@ -205,16 +209,16 @@ func swap{
     let (check_feasible_amount0) = uint256_lt(amount0, reserve0)
     let (check_feasible_amount1) = uint256_lt(amount1, reserve1)
     with_attr error_message("LP Error: Insuffictient liquidity"):
-        assert check_feasible_amount0 = 1
-        assert check_feasible_amount1 = 1
+        assert check_feasible_amount0 = TRUE
+        assert check_feasible_amount1 = TRUE
     end
 
     # Tranbser the amount out to swapper
     let (_token0) = token0.read()
     let (_token1) = token1.read()
-    if check_amount0 = 1:
+    if check_amount0 = TRUE:
         IERC20.transfer(contract_address=token0, recipient=to, amount=amount0)
-    if check_amount1 = 1:
+    if check_amount1 = TRUE:
         IERC20.transfer(contract_address=token1, recipient=to, amount=amount1)
     let (contract_address) = get_contract_address()
     let (balance0) = IERC20.balanceOf(contract_address=token0, account=contract_address)
@@ -225,8 +229,8 @@ func swap{
     let (local check_amount0_in) = uint256_gt(amount0_in,0)
     let (local check_amount1_in) = uint256_gt(amount1_in,0)
     with_attr error_message("Swap Error: Insufficient input amount"):
-        assert check_amount0_in = 1
-        assert check_amount1_in = 1
+        assert check_amount0_in = TRUE
+        assert check_amount1_in = TRUE
     end
     return ()
 end
