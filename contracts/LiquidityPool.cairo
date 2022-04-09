@@ -149,6 +149,14 @@ func add_liquidity{
             let calculated_amount1: Uint256 = amount1_optimal
         end
     end
+
+    ## TODO: implement tempvars to fix revoked references
+    ##       below does not fix
+    # tempvar syscall_ptr = syscall_ptr
+    # tempvar pedersen_ptr = pedersen_ptr
+    # tempvar range_check_ptr = range_check_ptr
+    let (caller_address) = get_caller_address()
+    let (contract_address) = get_contract_address()
     let (token0) = _token0.read()
     let (token1) = _token1.read()
     IERC20.transferFrom(
