@@ -111,12 +111,8 @@ func add_liquidity{
     with_attr error_message("LP Error: Amount is too small"):
         assert_not_zero(check_amount0 + check_amount1)
     end
-    # TO FIX
 
-    # let (reserve0, reserve1) = get_reserves()
-
-    let (reserve0: Uint256) = _reserve0.read()
-    let (reserve1: Uint256) = _reserve1.read()
+    let (reserve0: Uint256, reserve1: Uint256) = get_reserves()
 
     # First liquidity transaction
     let check_reserves: Uint256 = uint256_add(reserve0,reserve1)
@@ -142,9 +138,7 @@ func add_liquidity{
             let (local check_optimal1) = uint256_le(amount1_optimal, amount1)
 
             # Assert the optimal amount to be at least larger than the optimal (should never be true)
-            # with_attr error_message("Oops"):
-            #     assert check_optimal1 = TRUE
-            # end
+            assert check_optimal1 = TRUE
             let calculated_amount0: Uint256 = amount0
             let calculated_amount1: Uint256 = amount1_optimal
         end
