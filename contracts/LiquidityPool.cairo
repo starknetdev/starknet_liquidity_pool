@@ -117,9 +117,12 @@ func add_liquidity{
     # First liquidity transaction
     let check_reserves: Uint256 = uint256_add(reserve0,reserve1)
     let (local check_reserves_zero) = uint256_eq(check_reserves,Uint256(0,0))
+    tempvar syscall_ptr = syscall_ptr
+    tempvar pedersen_ptr = pedersen_ptr
+    tempvar range_check_ptr = range_check_ptr
     if check_reserves_zero == TRUE:
-        let calculated_amount0: Uint256 = amount0
-        let calculated_amount1: Uint256 = amount1
+        tempvar calculated_amount0: Uint256 = amount0
+        tempvar calculated_amount1: Uint256 = amount1
     else:
 
         # Get optimal amount of token0
@@ -128,8 +131,8 @@ func add_liquidity{
         # Check the amount0 inputed is larger or equal to the optimal amount
         let (local check_optimal0) = uint256_le(amount0_optimal, amount0)
         if check_optimal0 == TRUE:
-            let calculated_amount0: Uint256 = amount0_optimal
-            let calculated_amount1: Uint256 = amount1
+            tempvar calculated_amount0: Uint256 = amount0_optimal
+            tempvar calculated_amount1: Uint256 = amount1
         else:
             # Get optimal amount of token1
             let (amount1_optimal) = get_optimal_pair_amount(amount0, reserve0, reserve1)
@@ -139,16 +142,13 @@ func add_liquidity{
 
             # Assert the optimal amount to be at least larger than the optimal (should never be true)
             assert check_optimal1 = TRUE
-            let calculated_amount0: Uint256 = amount0
-            let calculated_amount1: Uint256 = amount1_optimal
+            tempvar calculated_amount0: Uint256 = amount0
+            tempvar calculated_amount1: Uint256 = amount1_optimal
         end
     end
 
     ## TODO: implement tempvars to fix revoked references
     ##       below does not fix
-    # tempvar syscall_ptr = syscall_ptr
-    # tempvar pedersen_ptr = pedersen_ptr
-    # tempvar range_check_ptr = range_check_ptr
     let (caller_address) = get_caller_address()
     let (contract_address) = get_contract_address()
     let (token0) = _token0.read()
